@@ -4,9 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 
-export const ProductCard = ({product}) => {
-    console.log(product)
-
+export const ProductCard = ({product, grade}) => {
     return (
         <Card
         variant="outlined"
@@ -16,7 +14,7 @@ export const ProductCard = ({product}) => {
             component="img"
             width="100"
             height="100"
-            alt={product.headline}
+            alt={product.title}
             src={product.imagesUrls[0]}
             sx={{
             borderRadius: '6px',
@@ -25,7 +23,7 @@ export const ProductCard = ({product}) => {
         />
         <Box sx={{ alignSelf: 'center', ml: 2 }}>
             <Typography variant="body2" color="text.secondary" fontWeight="regular">
-            {product.headline}
+            {product.title}
             </Typography>
             <Typography fontWeight="bold" noWrap gutterBottom>
             {product.newBestPrice}
@@ -33,7 +31,7 @@ export const ProductCard = ({product}) => {
             <Chip
             size="small"
             variant="outlined"
-            label={product.globalRating.score ? `${product.globalRating.score}` : 'No ratings'}
+            label={grade}
             />
         </Box>
         </Card>

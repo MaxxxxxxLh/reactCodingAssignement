@@ -9,6 +9,7 @@ export const fetchProducts = async (productId) => {
     try {
         console.log('Fetching products...');
         const response = await instance.get(`/${productId}`);
+        console.log('Products fetched:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching products:', error);
