@@ -40,3 +40,24 @@
 .read-the-docs {
   color: #888;
 }
+
+.product-section {
+  padding: 2rem;
+  background-color: #f9f9f9;
+}
+
+.product-section h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+  padding: 1rem;
+}
+

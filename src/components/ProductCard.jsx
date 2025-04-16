@@ -26,7 +26,7 @@ export const ProductCard = ({product, grade}) => {
             {product.title}
             </Typography>
             <Typography fontWeight="bold" noWrap gutterBottom>
-            {product.newBestPrice}
+            {product.newBestPrice}€
             </Typography>
             <Chip
             size="small"

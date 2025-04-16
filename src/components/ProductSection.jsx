@@ -1,10 +1,10 @@
 import { productsList } from '../data/productsList'
 import { fetchProducts } from '../utils/api'
 import { useState, useEffect } from 'react';
-//import BreadcrumbsNav from "../components/BreadcrumbsNav";
+import BreadcrumbsNav from "../components/BreadcrumbsNav";
 import Container from '@mui/material/Container';
 import { ProductCard } from './ProductCard';
-
+import "../App.css"
 
 export const ProductSection = () => {
     //const [products, setProducts] = useState([])
@@ -38,10 +38,10 @@ export const ProductSection = () => {
           setLoading(false);
         });
       }, []);
-      console.log(products)
+    console.log(products.data)
       return (
         <div className="product-section">
-          <h2>Our Products</h2>
+          {<BreadcrumbsNav product={products.data} />}
       
           {loading && <p>Loading...</p>}
           {error && <p>Error: {error.message}</p>}
