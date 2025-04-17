@@ -4,6 +4,25 @@ html, body {
   background-color: #ffffff;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   color: #222;
+  font-size: large;
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: medium;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: small;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: x-small;
+  }
 }
 
 #root {

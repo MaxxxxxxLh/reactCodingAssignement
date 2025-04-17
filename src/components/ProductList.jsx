@@ -11,7 +11,7 @@ export const ProductList = ({ adverts, productData }) => {
   }
   if (adverts.length === 0) {
     return (
-      <Grid item xs={12}>
+      <Grid>
         <Box
           sx={{
             mt: 4,
@@ -36,7 +36,7 @@ export const ProductList = ({ adverts, productData }) => {
   return (
     <Grid container spacing={2}>
       {adverts.map((advert) => (
-        <Grid key={advert.advertId} item xs={12}>
+        <Grid key={advert.advertId}>
           <ProductCard product={advert} data={productData} />
         </Grid>
       ))}

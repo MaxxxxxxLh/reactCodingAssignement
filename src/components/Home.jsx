@@ -14,7 +14,7 @@ export const Home = () => {
 
       <Grid container spacing={3}>
         {productsList.map((product) => (
-          <Grid item xs={12} sm={6} md={3} key={product.id}>
+          <Grid key={product.id}>
             <Card>
               <CardActionArea component={Link} to={`/product/${product.id}`}>
                 <CardContent>

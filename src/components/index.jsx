@@ -43,10 +43,10 @@ export const ProductSection = () => {
         ) : (
           <>
             <Grid container spacing={2}>
-              <Grid item size={{xs:12, md:4}}>
+              <Grid size={{xs:12, md:4}}>
                 <ProductImage selectedImageUrl={selectedImageUrl} productData={productData} />
               </Grid>
-              <Grid item size={{xs:12, md:8}}>
+              <Grid size={{xs:12, md:8}}>
                 <ProductFilters
                   productData={productData}
                   groups={groups}
@@ -61,7 +61,7 @@ export const ProductSection = () => {
               </Grid>
               
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{xs:12}}>
             <ProductDetails
               productData={productData}
               selectedFilter={selectedFilter}
