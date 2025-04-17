@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 
-export const ProductCard = ({ product, grade }) => {
+export const ProductCard = ({ product, data }) => {
   return (
     <Card
       variant="outlined"
@@ -20,14 +20,15 @@ export const ProductCard = ({ product, grade }) => {
     >
       <Box sx={{ flex: 1 }}>
        <Typography variant="h6" color="primary" sx={{ my: 1 }}>
-          {product.newBestPrice} €
+          {product.newBPrice} €
         </Typography>
 
-        <Chip size="small" label={`Note: ${grade}`} sx={{ mb: 1 }} />
+        <Chip size="small" label={data.globalRating.score? `Note: ${data.globalRating.score}` : "Pas de "} sx={{ mb: 1 }} />
 
         <Divider sx={{ my: 1 }} />
 
       </Box>
+
     </Card>
   );
 };
