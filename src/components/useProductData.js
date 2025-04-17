@@ -45,7 +45,7 @@ export const useProductData = (productId) => {
         advertIdsInGroup.includes(advert.productId)
       )
     : adverts;
-  const selectedImageUrl = currentGroup?.imgUrl || productData?.imagesUrls?.[0];
+  const selectedImageUrl = currentGroup?.imgUrl || productData?.imagesUrls;
 
   return {
     loading,

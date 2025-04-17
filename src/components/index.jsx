@@ -30,7 +30,7 @@ export const ProductSection = () => {
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
             <CircularProgress />
           </Box>
-        ) : error || !productData?.declinationGroupsFromMFP ? (
+        ) : error ? (
           <Box sx={{ textAlign: "center", mt: 6 }}>
             <Typography variant="h6" color="error" gutterBottom>
               Oups, une erreur est survenue !
