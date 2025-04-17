@@ -1,82 +1,73 @@
-import { productsList } from '../data/productsList';
-import { fetchProducts } from '../utils/api';
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import { productsList } from "../data/productsList";
+import { fetchProducts } from "../utils/api";
 import BreadcrumbsNav from "../components/BreadcrumbsNav";
-import Container from '@mui/material/Container';
-import { ProductCard } from './ProductCard';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import CardMedia from '@mui/material/CardMedia';
-import { useTheme, useMediaQuery } from "@mui/material";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import replaceSizeInDescription from "../utils/utils.js";
+import { ProductCard } from "./ProductCard";
+import Container from "@mui/material/Container";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import CardMedia from "@mui/material/CardMedia";
+import Chip from "@mui/material/Chip";
+import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import replaceSizeInDescription from "../utils/utils";
 import "../App.css";
 
 export const ProductSection = () => {
-  const [products, setProducts] = useState({});
+  const [productData, setProductData] = useState({});
+  const [groups, setGroups] = useState([]);
+  const [adverts, setAdverts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedSize, setSelectedSize] = useState("");
-
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
-  const isSm = useMediaQuery(theme.breakpoints.between("sm", "md"));
-  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
-
-  const getImageUrlBySize = (entries, targetSize) => {
-    return (
-      entries?.find((entry) => entry.size === targetSize)?.url ?? entries?.[0]?.url
-    );
-  };
+  const [selectedFilter, setSelectedFilter] = useState("");
 
   useEffect(() => {
-    setLoading(true);
-    fetchProducts(productsList[0].id)
-      .then((data) => {
-        setProducts(data);
-  
-        const firstSize = data?.data?.declinationGroupsFromMFP?.groups?.[0]?.groupKeyValue;
-        if (firstSize) {
-          setSelectedSize(firstSize);
-        }
-  
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
-  }, []);
-  
-  const entries = products?.data?.images?.[0]?.imagesUrls?.entry || [];
-
-  const groups = products?.data?.declinationGroupsFromMFP?.groups || [];
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchProducts(productsList[3].id);
+        const data = response.data;
+        setProductData(data);
+        setAdverts(data.adverts || []);
+        const groupData = data?.declinationGroupsFromMFP?.groups || [];
     
-  const uniqueSizes = groups.map((group) => group.groupKeyValue);
+        setGroups(groupData);
 
-  const sizeFilteredGroups = selectedSize
-    ? groups.filter((group) => group.groupKeyValue === selectedSize)
-    : groups;
+        if (groupData[0]?.groupKeyValue) {
+          setSelectedFilter(groupData[0].groupKeyValue);
+        }
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  let selectedImageUrl = "";
-  if (isXs) selectedImageUrl = getImageUrlBySize(entries, "SMALL");
-  else if (isSm) selectedImageUrl = getImageUrlBySize(entries, "MEDIUM");
-  else if (isMdUp) selectedImageUrl = getImageUrlBySize(entries, "LARGE");
-  console.log("size")
-  console.log(sizeFilteredGroups);
+    loadData();
+  }, []);
+
+  const uniqueFilters = groups.map((group) => group.groupKeyValue);
+
+  const currentGroup = groups.find(
+    (group) => group.groupKeyValue === selectedFilter
+  );
+  const advertIdsInGroup =
+    currentGroup?.groupProducts.map((p) => p.id) || [];
+  const filteredAdverts = adverts.filter(
+    (advert) =>
+      advertIdsInGroup.includes(advert.productId)
+  );
+
+  const selectedImageUrl = currentGroup?.imgUrl? currentGroup?.imgUrl: productData?.imagesUrls[0];
   
   return (
-    <Box sx={{ py: 4, backgroundColor: '#ffffff', minHeight: '100vh' }}>
+    <Box sx={{ py: 4, backgroundColor: "#ffffff", minHeight: "100vh" }}>
       <Container maxWidth="lg">
-        <BreadcrumbsNav product={products.data} />
+        <BreadcrumbsNav product={productData} />
 
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
             <CircularProgress />
           </Box>
         ) : error ? (
@@ -85,7 +76,7 @@ export const ProductSection = () => {
           </Typography>
         ) : (
           <Grid container spacing={2}>
-            <Grid item size={{ xs: 12, md: 4 }}>
+            <Grid item size={{xs:12, md:4}}>
               {selectedImageUrl && (
                 <Box
                   sx={{
@@ -97,9 +88,9 @@ export const ProductSection = () => {
                   <CardMedia
                     component="img"
                     image={selectedImageUrl}
-                    alt={products?.data?.cluster?.urlName}
+                    alt={productData?.cluster?.urlName}
                     sx={{
-                      width: { xs: "80%", md: "100%" },
+                      width: { xs: "70%", md: "100%" },
                       height: "auto",
                       borderRadius: 2,
                       objectFit: "cover",
@@ -109,73 +100,99 @@ export const ProductSection = () => {
               )}
             </Grid>
 
-            <Grid item size={{ xs: 12, md: 8 }}>
+            <Grid item size={{xs:12, md:8}}>
               <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
-                {sizeFilteredGroups[0]?.groupProducts[0]?.title}
+                {currentGroup?.groupProducts?.[0]?.title || ""}
               </Typography>
-
-              {uniqueSizes.length > 0 && (
+              <Chip
+                size="small"
+                color="default"
+                label={productData?.globalRating?.score ? `Note : ${productData?.globalRating?.score}/5` : "Pas encore d'avis"}
+                sx={{ mb: 2 }}
+              />
+              {uniqueFilters.length > 0 && (
                 <FormControl fullWidth sx={{ mb: 3 }}>
-                  <InputLabel id="filter-label">Filtrer par taille</InputLabel>
+                  <InputLabel id="filter-label">
+                    {productData.firstSelectorInternalLabel || "Filtrer"}
+                  </InputLabel>
                   <Select
                     labelId="filter-label"
-                    value={selectedSize}
-                    label="Filtrer par taille"
-                    onChange={(e) => setSelectedSize(e.target.value)}
+                    value={selectedFilter}
+                    label={productData.firstSelectorInternalLabel}
+                    onChange={(e) => setSelectedFilter(e.target.value)}
                   >
-                    {uniqueSizes.map((size) => (
-                      <MenuItem key={size} value={size}>
-                        {size}
+                    {uniqueFilters.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               )}
-
+              {filteredAdverts.length > 0 && (
               <Grid container spacing={2}>
-                {sizeFilteredGroups.map((group) =>
-                  group.groupProducts.map((product) => (
-                    <Grid key={product.id} item xs={12}>
-                      <ProductCard
-                        product={product}
-                        data={
-                          products.data
-                        }
-                      />
-                    </Grid>
-                  ))
-                )}
+                {filteredAdverts.map((advert) => (
+                  <Grid key={advert.advertId} item xs={12}>
+                    <ProductCard product={advert} data={productData} />
+                  </Grid>
+                ))}
               </Grid>
-            </Grid>
-            {products?.data?.productDetailTitle && (
-            <Grid item xs={12}>
-                <Box sx={{ mt: 4 }}>
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    {products.data.productDetailTitle}
+              )}
+              {filteredAdverts.length === 0 && (
+              <Grid item xs={12}>
+                <Box
+                sx={{
+                    mt: 4,
+                    p: 4,
+                    textAlign: "center",
+                    border: "2px dashed #ccc",
+                    borderRadius: 2,
+                    backgroundColor: "#f9f9f9",
+                }}
+                >
+                <Typography variant="h6" fontWeight="bold" color="text.secondary">
+                    Oups, aucun produit trouvé pour cette sélection.
                 </Typography>
-
-                {products.data.description && (
-                    <Box
-                    sx={{ mt: 2 }}
-                    dangerouslySetInnerHTML={{
-                        __html: `<ul>${replaceSizeInDescription(
-                        products.data.description,
-                        selectedSize
-                        )}</ul>`,
-                    }}
-                    />
-                )}
-
-                {products.data.edito && (
-                    <Box
-                    sx={{ mt: 2 }}
-                    dangerouslySetInnerHTML={{ __html: products.data.edito }}
-                    />
-                )}
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    Essayez un autre filtre ou reviens plus tard.
+                </Typography>
                 </Box>
+              </Grid>
+              )}
             </Grid>
-            )}
 
+
+
+            {productData?.productDetailTitle && (
+              <Grid item xs={12}>
+                <Box sx={{ mt: 4 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    {productData.productDetailTitle}
+                  </Typography>
+
+                  {productData.description && (
+                    <Box
+                      sx={{ mt: 2 }}
+                      dangerouslySetInnerHTML={{
+                        __html: `<ul>${replaceSizeInDescription(
+                          productData.description,
+                          selectedFilter
+                        )}</ul>`,
+                      }}
+                    />
+                  )}
+
+                  {productData.edito && (
+                    <Box
+                      sx={{ mt: 2 }}
+                      dangerouslySetInnerHTML={{
+                        __html: productData.edito,
+                      }}
+                    />
+                  )}
+                </Box>
+              </Grid>
+            )}
           </Grid>
         )}
       </Container>
