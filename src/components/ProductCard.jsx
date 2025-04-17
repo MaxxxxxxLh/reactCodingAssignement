@@ -23,7 +23,7 @@ export const ProductCard = ({ product, data }) => {
           {product.newBPrice} €
         </Typography>
 
-        <Chip size="small" label={data.globalRating.score? `Note: ${data.globalRating.score}` : "Pas de "} sx={{ mb: 1 }} />
+        <Chip size="small" label={data.globalRating.score? `Note: ${data.globalRating.score}/5` : "Pas encore d'avis sur cet article"} sx={{ mb: 1 }} />
 
         <Divider sx={{ my: 1 }} />
 

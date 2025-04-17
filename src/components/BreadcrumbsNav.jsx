@@ -1,58 +1,30 @@
-import React from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import HomeIcon from '@mui/icons-material/Home';
+import Typography from '@mui/material/Typography';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 
 const BreadcrumbsNav = ({ product }) => {
+  const breadcrumbs = product?.breadcrumbs || [];
+
   return (
-    <Box role="presentation" sx={{ py: 2, backgroundColor: '#ffffff' }}>
-      <Container maxWidth="md">
-        <Breadcrumbs
-          separator={<NavigateNextIcon fontSize="small" />}
-          aria-label="breadcrumb"
-          sx={{
-            fontSize: { xs: '0.85rem', sm: '1rem' },
-            flexWrap: 'wrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        >
+    <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb" sx={{ mb: 2 }}>
+      {breadcrumbs.map((crumb, index) =>
+        index < breadcrumbs.length - 1 ? (
           <Link
-            underline="hover"
+            key={crumb.url}
             color="inherit"
-            href="/"
-            sx={{ display: 'flex', alignItems: 'center' }}
-          >
-            <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            Accueil
-          </Link>
-          <Link
             underline="hover"
-            color="inherit"
-            href="/products"
-            sx={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            href={crumb.url}
           >
-            {product?.breadcrumbs?.[0]?.label || "Products"}
+            {crumb.label}
           </Link>
-          <Link
-            underline="hover"
-            color="text.primary"
-            sx={{
-              maxWidth: '200px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {product?.cluster?.clusterInfoDto?.h1 || "Produit"}
-          </Link>
-        </Breadcrumbs>
-      </Container>
-    </Box>
+        ) : (
+          <Typography key={crumb.url} color="text.primary">
+            {crumb.label}
+          </Typography>
+        )
+      )}
+    </Breadcrumbs>
   );
 };
 
