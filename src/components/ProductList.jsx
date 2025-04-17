@@ -2,6 +2,13 @@ import { Grid, Box, Typography } from "@mui/material";
 import { ProductCard } from "./ProductCard";
 
 export const ProductList = ({ adverts, productData }) => {
+  if (!adverts) {
+    return (
+      <Typography variant="body2" color="text.secondary">
+        Chargement des offres...
+      </Typography>
+    );
+  }
   if (adverts.length === 0) {
     return (
       <Grid item xs={12}>

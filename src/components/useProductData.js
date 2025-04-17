@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { fetchProducts } from "../utils/api";
-import { productsList } from "../data/productsList";
 
-export const useProductData = () => {
+
+export const useProductData = (productId) => {
   const [productData, setProductData] = useState({});
   const [groups, setGroups] = useState([]);
   const [adverts, setAdverts] = useState([]);
@@ -14,7 +14,7 @@ export const useProductData = () => {
     const loadData = async () => {
       setLoading(true);
       try {
-        const response = await fetchProducts(productsList[2].id);
+        const response = await fetchProducts(productId);
         const data = response.data;
         setProductData(data);
         setAdverts(data.adverts || []);
@@ -38,9 +38,13 @@ export const useProductData = () => {
     (group) => group.groupKeyValue === selectedFilter
   );
   const advertIdsInGroup = currentGroup?.groupProducts.map((p) => p.id) || [];
-  const filteredAdverts = adverts.filter((advert) =>
-    advertIdsInGroup.includes(advert.productId)
-  );
+
+  const filteredAdverts =
+  groups.length > 0
+    ? adverts.filter((advert) =>
+        advertIdsInGroup.includes(advert.productId)
+      )
+    : adverts;
   const selectedImageUrl = currentGroup?.imgUrl || productData?.imagesUrls?.[0];
 
   return {

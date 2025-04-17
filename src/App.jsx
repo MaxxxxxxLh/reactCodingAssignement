@@ -1,14 +1,17 @@
-import './App.css'
-import { ProductSection } from './components/index'
-
+import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ProductSection } from './components/index';
+import { Home } from './components/Home';
 
 function App() {
-
   return (
-    <>
-      <ProductSection />
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/product/:productId" element={<ProductSection />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

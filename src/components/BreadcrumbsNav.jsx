@@ -8,6 +8,7 @@ const BreadcrumbsNav = ({ product }) => {
 
   return (
     <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb" sx={{ mb: 2 }}>
+        <Link color="inherit" underline="hover" href="/">Accueil</Link>
       {breadcrumbs.map((crumb, index) =>
         index < breadcrumbs.length - 1 ? (
           <Link

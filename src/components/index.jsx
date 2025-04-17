@@ -5,8 +5,10 @@ import { ProductFilters } from "./ProductFilters";
 import { ProductList } from "./ProductList";
 import { ProductDetails } from "./ProductDetails";
 import { Container, Box, CircularProgress, Typography, Grid } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 export const ProductSection = () => {
+  const { productId } = useParams(); 
   const {
     loading,
     error,
@@ -17,7 +19,7 @@ export const ProductSection = () => {
     groups,
     currentGroup,
     selectedImageUrl,
-  } = useProductData();
+  } = useProductData(productId); 
 
   return (
     <Box sx={{ py: 4, backgroundColor: "#ffffff", minHeight: "100vh" }}>
@@ -28,10 +30,16 @@ export const ProductSection = () => {
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
             <CircularProgress />
           </Box>
-        ) : error ? (
-          <Typography color="error" align="center" sx={{ mt: 4 }}>
-            Error: {error.message}
-          </Typography>
+        ) : error || !productData?.declinationGroupsFromMFP ? (
+          <Box sx={{ textAlign: "center", mt: 6 }}>
+            <Typography variant="h6" color="error" gutterBottom>
+              Oups, une erreur est survenue !
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Nous n'avons pas pu charger les offres pour ce produit. <br />
+              Veuillez réessayer plus tard ou consulter un autre article.
+            </Typography>
+          </Box>
         ) : (
           <>
             <Grid container spacing={2}>

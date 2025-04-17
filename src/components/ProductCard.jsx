@@ -1,14 +1,14 @@
 import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 
-export const ProductCard = ({ product}) => {
+export const ProductCard = ({ product }) => {
   const {
     salePrice,
+    rspCampaignDiscount,
     shippingAmount,
     quality,
     seller,
@@ -22,6 +22,8 @@ export const ProductCard = ({ product}) => {
       ? `${crewDetails.brand.cashback.value}% de cashback`
       : null;
 
+  const hasDiscount = rspCampaignDiscount && rspCampaignDiscount > 0;
+
   return (
     <Card
       variant="outlined"
@@ -34,10 +36,22 @@ export const ProductCard = ({ product}) => {
         boxShadow: 2,
       }}
     >
-
       <Box sx={{ flex: 1 }}>
         <Typography variant="h6" color="primary" sx={{ mb: 1 }}>
-          {salePrice.toFixed(2)} €
+          {hasDiscount && (
+            <span style={{ textDecoration: "line-through", color: "#999", marginRight: 8 }}>
+              {salePrice.toFixed(2)} €
+            </span>
+          )}
+          <strong>{(salePrice*(1-rspCampaignDiscount/100)).toFixed(2)} €</strong>
+          {hasDiscount && rspCampaignDiscount && (
+            <Chip
+              label={`-${rspCampaignDiscount}%`}
+              color="error"
+              size="small"
+              sx={{ ml: 1 }}
+            />
+          )}
         </Typography>
 
         <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 1 }}>
